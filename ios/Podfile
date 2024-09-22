@@ -26,6 +26,7 @@ if linkage != nil
 end
 
 target 'testBridgeRN' do
+  use_frameworks!  # Thêm dòng này
   config = use_native_modules!
 
   use_react_native!(
