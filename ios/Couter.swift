@@ -8,7 +8,7 @@
 import Foundation
 
 @objc(Counter)
-class Counter: NSObject {
+class Counter: RCTEventEmitter {
   
   private var count = 0;
   
@@ -17,16 +17,21 @@ class Counter: NSObject {
       count += 1
 //      print(count)
       callback([count])
-    }
+    sendEvent(withName: "onIncrement", body: ["count increase",count])
+  }
   
   @objc
-  static func requiresMainQueueSetup() ->Bool{
+  override static func requiresMainQueueSetup() ->Bool{
     return true;
   }
   
   @objc
-  func constantsToExport() -> [String : Any]!{
+  override func constantsToExport() -> [AnyHashable : Any]!{
     return ["initialCount": 0];
+  }
+  
+  override func supportedEvents() -> [String]! {
+  return ["onIncrement","onDecrement"]
   }
   
   @objc
@@ -39,6 +44,7 @@ class Counter: NSObject {
     else {
       count -= 1
       resolve("count is \(count)")
+      sendEvent(withName:"onDecrement", body: ["count decrease", count])
     }
  
   }
